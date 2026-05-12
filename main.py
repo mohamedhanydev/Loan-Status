@@ -6,10 +6,9 @@ from imblearn.over_sampling import SMOTENC
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeClassifier
-
 
 RANDOM_STATE = 42
 cat_cols = ["Married", "Dependents", "Education", "Self_Employed", "Credit_History", "Property_Area"]
@@ -161,6 +160,23 @@ def evaluate_results(model_name, y_true, y_pred):
     print(f"--- {model_name} Results ---")
     print(f"Accuracy:  {accuracy_score(y_true, y_pred):.4f}")
     print(f"F1-Score:  {f1_score(y_true, y_pred):.4f}\n")
+    print("\nClassification Report:")
+    print(classification_report(y_true, y_pred))
+
+    cm = confusion_matrix(y_true, y_pred)
+    print("Confusion Matrix:")
+    print(cm)
+
+    plt.figure(figsize=(6, 5))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
+    plt.title(f"{model_name} Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+    plt.tight_layout()
+    filename = f"confusion_matrix_{model_name.lower().replace(' ', '_')}.png"
+    plt.savefig(filename)
+    plt.close()
+
 
 def models():
     # Logistic Regression (Champion Model)
